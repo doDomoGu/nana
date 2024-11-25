@@ -1,13 +1,16 @@
 {
-  "name": "nana",
+  "name": "@nana/db-mysql_node",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "./connection.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "mysql2": "^3.11.4"
+  }
 }
