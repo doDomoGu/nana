@@ -74,7 +74,7 @@ importers:
 
   packages/frontend/server/node:
     dependencies:
-      '@packages/mysql-db':
+      '@nana/db-mysql_node':
         specifier: workspace:^
         version: link:../../../db/mysql/node
       dayjs:

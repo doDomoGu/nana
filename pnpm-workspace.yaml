@@ -1,3 +1,4 @@
 packages:
-  - 'packages/frontend/**'
+  - 'packages/frontend/**/*'
+  - 'packages/backend/**/*'
   - 'packages/db/mysql/node'
