@@ -1,10 +1,8 @@
 const express = require('express')
-const stock = require('./modules/stock')
-const stock = require('./modules/stock')
+const user = require('./modules/user')
 
 const router = express.Router()
 
-router.use('/test', test)
-router.use('/stock', stock)
+router.use('/user', user)
 
 module.exports = router
