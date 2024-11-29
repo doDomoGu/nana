@@ -3,6 +3,8 @@ const router = express.Router()
 
 const DB = require('@nana/db-mysql_node')
 
+const { generateRandomString } = require('@utils/func.js')
+
 const encrypto = (str) => {
   const crypto = require("crypto");
   const md5 = crypto.createHash("md5"); //设置加密模式为md5
@@ -44,7 +46,15 @@ router.post('/login', async (req, res) => {
   }
 
   if (user && user.pwd == encrypto(req.body.pwd)) {
-    return res.send({ success: true })
+    try {
+      const session = generateRandomString(32)
+
+      await DB.login_session.add({ user_id: user.id, session })
+
+      return res.send({ success: true, data: { session } })
+    } catch (err) {
+      return res.send({ success: false, errmsg: err.message })
+    }
   } else {
     return res.send({ success: false, errmsg: 'wrong name/pwd' })
   }
