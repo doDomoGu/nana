@@ -10,9 +10,15 @@ importers:
 
   packages/db/mysql/node:
     dependencies:
+      crypto:
+        specifier: ^1.0.1
+        version: 1.0.1
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      module-alias:
+        specifier: ^2.2.3
+        version: 2.2.3
       mysql2:
         specifier: ^3.11.4
         version: 3.11.4

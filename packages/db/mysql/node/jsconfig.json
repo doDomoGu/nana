@@ -2,6 +2,7 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"],
+      "@modules/*": ["./src/modules/*"],
       "@utils/*": ["./src/utils/*"]
     }
   },

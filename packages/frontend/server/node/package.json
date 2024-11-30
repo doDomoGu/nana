@@ -17,6 +17,6 @@
     "module-alias": "^2.2.3"
   },
   "_moduleAliases": {
-    "@utils": "src/utils"
+    "@frontServer": "./src"
   }
 }

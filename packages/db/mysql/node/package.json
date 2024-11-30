@@ -2,7 +2,7 @@
   "name": "@nana/db-mysql_node",
   "version": "1.0.0",
   "description": "",
-  "main": "./index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "crypto": "^1.0.1",
     "dayjs": "^1.11.13",
-    "mysql2": "^3.11.4"
+    "mysql2": "^3.11.4",
+    "module-alias": "^2.2.3"
+  },
+  "_moduleAliases": {
+    "@mysql:node": "./src"
   }
 }
