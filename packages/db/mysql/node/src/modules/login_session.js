@@ -16,3 +16,18 @@ module.exports.add = async (params) => {
     return RESPONSE.error(e.message)
   }
 }
+
+module.exports.verify = async (params) => {
+  try {
+    const connection = await getConnection()
+
+    const [result] = await connection.execute(
+      `SELECT * FROM \`login_session\` WHERE session = "${params.token}"`
+    )
+    await connection.end()
+
+    return RESPONSE.success(result && result.length == 1 ? result[0] : null)
+  } catch (e) {
+    return RESPONSE.error(e.message)
+  }
+}
