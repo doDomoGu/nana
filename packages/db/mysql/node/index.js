@@ -6,10 +6,9 @@ require('module-alias')(__dirname)
 //   '@utils': path.resolve(__dirname + '/src/utils'),
 // })
 
-const user = require('@mysql:node/modules/user.js')
-const login_session = require('@mysql:node/modules/login_session.js')
-
 module.exports = {
-  user,
-  login_session
+  user: require('@mysql:node/modules/user'),
+  login_session: require('@mysql:node/modules/login_session'),
+  game: require('@mysql:node/modules/game'),
+  game_user: require('@mysql:node/modules/game_user')
 }

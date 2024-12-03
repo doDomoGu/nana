@@ -1,11 +1,9 @@
 const express = require('express')
-const user = require('@frontServer/modules/user')
-const room = require('@frontServer/modules/room')
-
 const router = express.Router()
 
-router.use('/user', user)
+router.use('/init', require('@frontServer/modules/init'))
 
-router.use('/room', room)
+router.use('/user', require('@frontServer/modules/user'))
+router.use('/game', require('@frontServer/modules/game'))
 
 module.exports = router

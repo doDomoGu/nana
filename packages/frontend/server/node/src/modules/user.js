@@ -16,11 +16,6 @@ const encrypto = (str) => {
   return result;//返回后加密过后的密码
 }
 
-router.get('/init', async (req, res) => {
-  const result = await DB.user.init()
-  res.send(result)
-})
-
 router.get('/list', async (req, res) => {
   const result = await DB.user.getList()
   if (result.code == 200) {

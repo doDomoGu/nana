@@ -1,6 +1,6 @@
 const RESPONSE = require('@mysql:node/utils/response')
 
-const getConnection = require('@mysql:node/connection.js')
+const getConnection = require('@mysql:node/connection')
 
 const encrypto = (str) => {
   const crypto = require("crypto");
@@ -35,6 +35,12 @@ module.exports.init = async () => {
     await connection.execute(
       `INSERT INTO \`user\` (name, pwd, email) VALUES ('admin', '${encrypto('123123')}', 'admin@qq.com')`
     )
+    await connection.execute(
+      `INSERT INTO \`user\` (name, pwd, email) VALUES ('player1', '${encrypto('123123')}', 'player1@qq.com')`
+    )
+    await connection.execute(
+      `INSERT INTO \`user\` (name, pwd, email) VALUES ('player2', '${encrypto('123123')}', 'player2@qq.com')`
+    )
 
     await connection.end()
 
@@ -55,6 +61,26 @@ module.exports.getList = async () => {
 
     await connection.end()
     return RESPONSE.success(result)
+  } catch (e) {
+    return RESPONSE.error(e.message)
+  }
+}
+
+module.exports.getOneById = async (id) => {
+  try {
+    const connection = await getConnection()
+
+    const [result, fields] = await connection.execute(
+      `select * from \`user\` where id = '${id}'`
+    )
+
+    await connection.end()
+
+    if (result && result.length == 1) {
+      return RESPONSE.success(result[0])
+    } else {
+      return RESPONSE.success(null)
+    }
   } catch (e) {
     return RESPONSE.error(e.message)
   }
