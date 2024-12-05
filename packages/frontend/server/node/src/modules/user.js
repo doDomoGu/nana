@@ -43,7 +43,7 @@ router.post('/register', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-  const result = await DB.user.getOneByName(req.body.name)
+  const result = await DB.user.getOneByName(req.body.username)
   // console.log(result)
   if (result.code != 200) {
     return res.send(RESPONSE.error(result.msg))
@@ -51,18 +51,18 @@ router.post('/login', async (req, res) => {
 
   const user = result.data
   // console.log(!user)
-  if (!user || user.pwd != encrypto(req.body.pwd)) {
-    return res.send(RESPONSE.success('wrong user/password', 401))
+  if (!user || user.pwd != encrypto(req.body.password)) {
+    return res.send(RESPONSE.error('wrong user/password', 401))
   }
 
-  const session = generateRandomString(32)
+  const token = generateRandomString(32)
 
-  const sessionAddResult = await DB.login_session.add({ user_id: user.id, session })
+  const createResult = await DB.login_session.add({ user_id: user.id, session: token })
 
-  if (sessionAddResult.code == 200) {
-    return res.send(RESPONSE.success({ session }))
+  if (createResult.code == 200) {
+    return res.send(RESPONSE.success({ token }))
   } else {
-    return res.send(RESPONSE.error(sessionAddResult.msg))
+    return res.send(RESPONSE.error(createResult.msg))
   }
 
 })

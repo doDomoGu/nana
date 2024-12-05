@@ -8,7 +8,8 @@ const app = express()
 
 const myAuth = require('@frontServer/middlewares/auth')
 
-app.use(express.urlencoded({ extended: false }))
+// app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
 
 app.use(myAuth)
 
