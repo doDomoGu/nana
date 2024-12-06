@@ -106,7 +106,7 @@ module.exports.getOneByName = async (name) => {
   }
 }
 
-module.exports.add = async (params) => {
+module.exports.create = async (params) => {
   try {
     const connection = await getConnection()
 

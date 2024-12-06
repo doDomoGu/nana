@@ -16,9 +16,10 @@ const request = (options: AxiosRequestConfig): Promise<AxiosResponse> => {
     (config) => {
       config.headers['Content-Type'] = 'application/json'
       // 可以在这里添加例如token等请求头
-      // if (store.getState().user.token) {
-      //   config.headers['Authorization'] = `Bearer ${store.getState().user.token}`;
-      // }
+      if (sessionStorage.getItem('token')) {
+        config.headers['Authorization'] =
+          `Bearer ${sessionStorage.getItem('token')}`
+      }
       return config
     },
     (error) => {

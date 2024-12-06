@@ -1,49 +1,27 @@
-import React, { useState } from 'react'
-import request from '@/utils/request'
-import {
-  Form,
-  Input,
-  Button,
-  Dialog,
-  TextArea,
-  DatePicker,
-  Selector,
-  Slider,
-  Stepper,
-  Switch
-} from 'antd-mobile'
+import { useState } from 'react'
+import { Form, Input, Button } from 'antd-mobile'
+
+import * as UserApi from '@/api/user'
 
 const LoginForm = ({ onSuccess }) => {
-  // const [credentials, setCredentials] = useState({
-  //   username: 'admin',
-  //   password: '123123'
-  // })
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-
-  // const handleChange = (val, field) => {
-  //   console.log('handleChange', val, field)
-  //   setCredentials({ ...credentials, [field]: val })
-  // }
+  const [credentials, setCredentials] = useState({ username: '', password: '' })
+  const [errorMsg, setErrorMsg] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await request({
-        url: '/user/login',
-        method: 'post',
-        data: {
-          username,
-          password
-        }
-      })
+      const response = await UserApi.login(
+        credentials.username,
+        credentials.password
+      )
       if (response.code == 200) {
         const { token } = response.data
         sessionStorage.setItem('token', token)
-        onSuccess()
+        onSuccess(token)
       } else {
-        console.error('登录失败:', response.msg)
+        setErrorMsg('用户名/密码错误!')
+        // setErrorMsg(response.msg)
+        // console.error('登录失败:', response.msg)
       }
 
       // 登录成功后的操作，比如页面跳转
@@ -57,10 +35,6 @@ const LoginForm = ({ onSuccess }) => {
   return (
     <Form
       layout="vertical"
-      initialValues={{
-        username: 'admin',
-        password: '123123'
-      }}
       footer={
         <Button
           block
@@ -75,20 +49,25 @@ const LoginForm = ({ onSuccess }) => {
     >
       <Form.Item label="用户名" name="username">
         <Input
-          onChange={(val) => setUsername(val)}
-          value={username}
+          onChange={(val) => setCredentials({ ...credentials, username: val })}
+          value={credentials.username}
+          autoComplete="on"
           placeholder="请输入用户名"
           clearable
         />
       </Form.Item>
       <Form.Item label="密码" name="password">
         <Input
-          onChange={(val) => setPassword(val)}
-          value={password}
+          onChange={(val) => setCredentials({ ...credentials, password: val })}
+          value={credentials.password}
+          autoComplete="on"
           placeholder="请输入密码"
           clearable
           type="password"
         />
+      </Form.Item>
+      <Form.Item>
+        <div style={{ color: 'red' }}>{errorMsg}</div>
       </Form.Item>
     </Form>
   )

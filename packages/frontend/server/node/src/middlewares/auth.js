@@ -3,7 +3,7 @@ const DB = require('@nana/db-mysql_node')
 const RESPONSE = require('@frontServer/utils/response')
 
 module.exports = async function (req, res, next) {
-  const unauthPaths = ['/user/login', '/user/register', '/init']  // 允许的路由path 不需要auth校验
+  const unauthPaths = ['/user/login', '/user/register', '/user/verify', '/init']  // 允许的路由path 不需要auth校验
   if (unauthPaths.includes(req.path)) {
     return next()
   }

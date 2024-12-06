@@ -12,10 +12,10 @@ module.exports.init = async () => {
       `CREATE TABLE IF NOT EXISTS \`login_session\` (
         \`id\` int NOT NULL AUTO_INCREMENT,
         \`user_id\` int NOT NULL,
-        \`session\` varchar(255) NOT NULL,
+        \`token\` varchar(255) NOT NULL,
         \`expired\` datetime NOT NULL,
         PRIMARY KEY (\`id\`),
-        UNIQUE KEY \`user_session\` (\`user_id\`,\`session\`)
+        UNIQUE KEY \`token_UNIQUE\` (\`token\`)
       )`
     )
     await connection.end()
@@ -26,12 +26,12 @@ module.exports.init = async () => {
   }
 }
 
-module.exports.add = async (params) => {
+module.exports.create = async (params) => {
   try {
     const connection = await getConnection()
 
     await connection.execute(
-      `INSERT INTO \`login_session\` (user_id, session, expired) VALUES ('${params.user_id}', '${params.session}', DATE_ADD(NOW(), INTERVAL 1 MONTH))`
+      `INSERT INTO \`login_session\` (user_id, token, expired) VALUES ('${params.user_id}', '${params.token}', DATE_ADD(NOW(), INTERVAL 1 MONTH))`
     )
     await connection.end()
 
@@ -46,11 +46,31 @@ module.exports.verify = async (token) => {
     const connection = await getConnection()
 
     const [result] = await connection.execute(
-      `SELECT * FROM \`login_session\` WHERE session = "${token}"`
+      `SELECT * FROM \`login_session\` WHERE token = "${token}"`
     )
     await connection.end()
 
     return RESPONSE.success(result && result.length == 1 ? result[0] : null)
+  } catch (e) {
+    return RESPONSE.error(e.message)
+  }
+}
+
+module.exports.remove = async (params) => {
+  try {
+    const connection = await getConnection()
+
+    const [result] = await connection.execute(
+      `DELETE FROM \`login_session\` WHERE token = '${params.token}'`
+    )
+    await connection.end()
+
+    if (result.affectedRows == 1) {
+      return RESPONSE.success(true)
+    } else {
+      return RESPONSE.error('no session record')
+    }
+
   } catch (e) {
     return RESPONSE.error(e.message)
   }

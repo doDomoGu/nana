@@ -57,13 +57,45 @@ router.post('/login', async (req, res) => {
 
   const token = generateRandomString(32)
 
-  const createResult = await DB.login_session.add({ user_id: user.id, session: token })
+  const createResult = await DB.login_session.create({ user_id: user.id, token })
 
   if (createResult.code == 200) {
     return res.send(RESPONSE.success({ token }))
   } else {
     return res.send(RESPONSE.error(createResult.msg))
   }
+
+})
+
+router.post('/logout', async (req, res) => {
+  const authHeader = req.headers['authorization'] || '';
+  const token = authHeader.split('Bearer ')[1];
+
+  const result = await DB.login_session.remove({ token })
+  if (result.code != 200) {
+    return res.send(RESPONSE.error(result.msg))
+  }
+
+  return res.send(RESPONSE.success(true))
+
+})
+
+
+router.post('/verify', async (req, res) => {
+  const sessionResult = await DB.login_session.verify(req.body.token)
+  if (sessionResult.code != 200 || sessionResult.data == null) {
+    // 根据token 找不到session记录
+    return res.status(401).send(RESPONSE.error('no permission', 401))
+  }
+
+
+  const userResult = await DB.user.getOneById(sessionResult.data.user_id)
+
+  if (userResult.code != 200) {
+    return res.send(RESPONSE.error(userResult.msg))
+  }
+
+  return res.send(RESPONSE.success({ ...userResult.data }))
 
 })
 
