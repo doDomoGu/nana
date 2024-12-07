@@ -1,6 +1,6 @@
 // import { MemoryRouter as Router } from 'react-router-dom'
 // import Bottom from './layouts/Bottom'
-import Login from './components/login'
+import Auth from './components/auth'
 function App() {
   // const [activeKey, setActiveKey] = useState('todo')
   return (
@@ -9,8 +9,7 @@ function App() {
     // </Router>
 
     <>
-      <div>222</div>
-      <Login></Login>
+      <Auth />
     </>
   )
 }
