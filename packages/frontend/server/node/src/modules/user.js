@@ -27,12 +27,12 @@ router.get('/list', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   const params = {
-    name: req.body.name,
-    pwd: encrypto(req.body.pwd),
+    username: req.body.username,
+    password: encrypto(req.body.password),
     email: req.body.email
   }
 
-  const result = await DB.user.add(params)
+  const result = await DB.user.create(params)
 
   if (result.code == 200) {
     return res.send(RESPONSE.success(result.data))

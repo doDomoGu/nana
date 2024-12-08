@@ -11,6 +11,22 @@ export const login = async (username: string, password: string) => {
   })
 }
 
+export const register = async (
+  username: string,
+  password: string,
+  email: string
+) => {
+  return await request({
+    url: '/user/register',
+    method: 'post',
+    data: {
+      username,
+      password,
+      email
+    }
+  })
+}
+
 export const verify = async (token: string) => {
   return await request({
     url: '/user/verify',

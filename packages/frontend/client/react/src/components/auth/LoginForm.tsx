@@ -3,7 +3,7 @@ import { Dialog, Form, Input, Button } from 'antd-mobile'
 
 import * as UserApi from '@/api/user'
 
-const LoginForm = ({ onSuccess }) => {
+const LoginForm = ({ onSuccess, onToRegister }) => {
   const [credentials, setCredentials] = useState({ username: '', password: '' })
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -33,20 +33,7 @@ const LoginForm = ({ onSuccess }) => {
   }
 
   return (
-    <Form
-      layout="vertical"
-      footer={
-        <Button
-          block
-          type="submit"
-          color="primary"
-          size="large"
-          onClick={handleSubmit}
-        >
-          提交
-        </Button>
-      }
-    >
+    <Form layout="vertical">
       <Form.Item label="用户名" name="username">
         <Input
           onChange={(val) => setCredentials({ ...credentials, username: val })}
@@ -68,6 +55,28 @@ const LoginForm = ({ onSuccess }) => {
       </Form.Item>
       <Form.Item>
         <div style={{ color: 'red' }}>{errorMsg}</div>
+      </Form.Item>
+      <Form.Item>
+        <Button
+          block
+          type="submit"
+          color="primary"
+          size="large"
+          onClick={handleSubmit}
+        >
+          登录
+        </Button>
+      </Form.Item>
+      <Form.Item>
+        <Button
+          block
+          type="submit"
+          color="default"
+          size="large"
+          onClick={() => onToRegister()}
+        >
+          没账号? 去注册
+        </Button>
       </Form.Item>
     </Form>
   )

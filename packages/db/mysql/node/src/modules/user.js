@@ -111,7 +111,7 @@ module.exports.create = async (params) => {
     const connection = await getConnection()
 
     await connection.execute(
-      `insert into \`user\` (name, pwd, email) values ('${params.name}', '${params.pwd}', '${params.email}')`
+      `insert into \`user\` (name, pwd, email) values ('${params.username}', '${params.password}', '${params.email}')`
     )
 
     await connection.end()
