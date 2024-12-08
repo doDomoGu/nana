@@ -12,7 +12,11 @@ const Logout = ({ onSuccess }) => {
     }
   }
 
-  return <Button onClick={handleLogout}>登出</Button>
+  return (
+    <Button loading="auto" onClick={handleLogout}>
+      登出
+    </Button>
+  )
 }
 
 export default Logout

@@ -6,12 +6,15 @@ const router = require('@frontServer/router')
 
 const app = express()
 
-const myAuth = require('@frontServer/middlewares/auth')
-
+// ==== 中间件 start === 
 // app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-app.use(myAuth)
+app.use(require('@frontServer/middlewares/auth'))
+
+app.use(require('@frontServer/middlewares/delay')())
+
+// === 中间件 end ===
 
 app.use('/', router)
 

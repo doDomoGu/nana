@@ -5,7 +5,7 @@ const baseURL = '/api'
 const request = (options: AxiosRequestConfig): Promise<AxiosResponse> => {
   const instance = axios.create({
     baseURL,
-    timeout: 1000
+    timeout: 1000 * 10
     // headers: {
     //   'Content-Type': 'application/json' // 设置Content-Type为application/json
     // }

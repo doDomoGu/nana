@@ -62,6 +62,7 @@ const LoginForm = ({ onSuccess, onToRegister }) => {
           type="submit"
           color="primary"
           size="large"
+          loading="auto"
           onClick={handleSubmit}
         >
           登录

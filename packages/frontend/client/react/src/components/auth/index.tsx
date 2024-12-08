@@ -21,14 +21,7 @@ const Auth = (/*props: Props*/) => {
     }
   }
 
-  // const [isLoading, setIsLoading] = useState(false)
-  // const [visible, setVisible] = useState(false)
-
-  // const [token, setToken] = useState(sessionStorage.getItem('token'))
-  // const [isAuth, setIsAuth] = useState(false)
-
   useEffect(() => {
-    // autoLogin()
     hasToken()
   }, [])
 
@@ -64,17 +57,6 @@ const Auth = (/*props: Props*/) => {
     default:
       return <>auth error</>
   }
-  // if (status == 'verifying') {
-
-  // }
-
-  // if (status == 'loggedIn') {
-
-  // }
-
-  // return (
-
-  // )
 }
 
 export default Auth
