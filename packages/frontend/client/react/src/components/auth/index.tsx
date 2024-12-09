@@ -6,13 +6,15 @@ import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import Logout from './Logout'
 
-import * as UserApi from '@/api/user'
+import { useUser } from '@/context/User.tsx'
 
 // type Props = {}
 
 const Auth = (/*props: Props*/) => {
   const [status, setStatus] = useState('') // verifying / loggedIn / notLoggedIn
   const [dialog, setDialog] = useState('Login') // Login / Register
+  const [userState, dispatch] = useUser()
+
   const hasToken = () => {
     if (!sessionStorage.getItem('token')) {
       setStatus('notLoggedIn')
@@ -29,12 +31,30 @@ const Auth = (/*props: Props*/) => {
     case 'verifying':
       return (
         <AutoLoginVerifying
-          onSuccess={() => setStatus('loggedIn')}
-          onFailed={() => setStatus('notLoggedIn')}
+          onSuccess={(user) => {
+            setStatus('loggedIn')
+            dispatch({ type: 'LOGIN', payload: user })
+          }}
+          onFailed={() => {
+            setStatus('notLoggedIn')
+            dispatch({ type: 'LOGOUT' })
+          }}
         />
       )
     case 'loggedIn':
-      return <Logout onSuccess={() => setStatus('notLoggedIn')} />
+      return (
+        <>
+          <div>
+            {userState.user.id}: {userState.user.name}
+          </div>
+          <Logout
+            onSuccess={() => {
+              setStatus('notLoggedIn')
+              dispatch({ type: 'LOGOUT' })
+            }}
+          />
+        </>
+      )
     case 'notLoggedIn':
       return (
         <Dialog
@@ -42,7 +62,10 @@ const Auth = (/*props: Props*/) => {
           content={
             dialog == 'Login' ? (
               <LoginForm
-                onSuccess={() => setStatus('loggedIn')}
+                onSuccess={(user) => {
+                  setStatus('loggedIn')
+                  dispatch({ type: 'LOGIN', payload: user })
+                }}
                 onToRegister={() => setDialog('Register')}
               />
             ) : (

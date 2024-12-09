@@ -60,7 +60,12 @@ router.post('/login', async (req, res) => {
   const createResult = await DB.login_session.create({ user_id: user.id, token })
 
   if (createResult.code == 200) {
-    return res.send(RESPONSE.success({ token }))
+    return res.send(RESPONSE.success({
+      token, user: {
+        ...user,
+        pwd: undefined
+      }
+    }))
   } else {
     return res.send(RESPONSE.error(createResult.msg))
   }
@@ -95,7 +100,10 @@ router.post('/verify', async (req, res) => {
     return res.send(RESPONSE.error(userResult.msg))
   }
 
-  return res.send(RESPONSE.success({ ...userResult.data }))
+  return res.send(RESPONSE.success({
+    ...userResult.data,
+    pwd: undefined
+  }))
 
 })
 

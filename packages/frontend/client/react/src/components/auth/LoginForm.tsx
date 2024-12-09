@@ -15,9 +15,9 @@ const LoginForm = ({ onSuccess, onToRegister }) => {
         credentials.password
       )
       if (response.code == 200) {
-        const { token } = response.data
+        const { token, user } = response.data
         sessionStorage.setItem('token', token)
-        onSuccess(token)
+        onSuccess(user)
       } else {
         setErrorMsg('用户名/密码错误!')
         // setErrorMsg(response.msg)
