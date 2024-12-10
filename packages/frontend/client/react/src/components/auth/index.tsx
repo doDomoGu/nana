@@ -11,7 +11,7 @@ import { useUser } from '@/context/User.tsx'
 // type Props = {}
 
 const Auth = (/*props: Props*/) => {
-  const [status, setStatus] = useState('') // verifying / loggedIn / notLoggedIn
+  const [status, setStatus] = useState('') // verifying / notLoggedIn / loggedIn
   const [dialog, setDialog] = useState('Login') // Login / Register
   const [userState, dispatch] = useUser()
 
@@ -41,20 +41,6 @@ const Auth = (/*props: Props*/) => {
           }}
         />
       )
-    case 'loggedIn':
-      return (
-        <>
-          <div>
-            {userState.user.id}: {userState.user.name}
-          </div>
-          <Logout
-            onSuccess={() => {
-              setStatus('notLoggedIn')
-              dispatch({ type: 'LOGOUT' })
-            }}
-          />
-        </>
-      )
     case 'notLoggedIn':
       return (
         <Dialog
@@ -77,6 +63,19 @@ const Auth = (/*props: Props*/) => {
           }
         />
       )
+    case 'loggedIn':
+      return (
+        <>
+          ID:{userState.user.id}/name:{userState.user.name}
+          <Logout
+            onSuccess={() => {
+              setStatus('notLoggedIn')
+              dispatch({ type: 'LOGOUT' })
+            }}
+          />
+        </>
+      )
+
     default:
       return <>auth error</>
   }

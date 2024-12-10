@@ -9,7 +9,7 @@ const AutoLoginVerifying = ({ onSuccess, onFailed }) => {
       const token = sessionStorage.getItem('token')
       const res = await UserApi.verify(token)
       if (res.code == 200) {
-        console.log('autologin success', res.data)
+        // console.log('autologin success', res.data)
         onSuccess(res.data)
       } else {
         console.log('autologin failed', res)

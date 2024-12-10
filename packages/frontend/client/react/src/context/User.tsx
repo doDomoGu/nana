@@ -8,7 +8,7 @@ const initialState = {
 
 // 定义reducer来处理状态变化
 function userReducer(state, action) {
-  console.log('userReducer', action)
+  // console.log('userReducer', action)
   switch (action.type) {
     case 'LOGIN':
       return { isLoggedIn: true, user: action.payload }

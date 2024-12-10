@@ -40,6 +40,45 @@ module.exports.init = async () => {
   }
 }
 
+module.exports.list = async () => {
+  try {
+    const connection = await getConnection()
+
+    const [res] = await connection.execute(
+      `SELECT * FROM \`game\` ORDER BY \`id\` asc`
+    )
+    const [gameUserRes] = await connection.execute(
+      `SELECT * FROM \`game_user\``
+    )
+
+    const gameUserMap = new Map()
+
+    gameUserRes.forEach(v => {
+      const gid = v.game_id
+      if (gameUserMap.has(gid)) {
+        gameUserMap.set(gid, [...gameUserMap.get(gid), v.user_id])
+      } else {
+        gameUserMap.set(gid, [v.user_id])
+      }
+    })
+
+    const result = res.map(v => {
+      // console.log(v.id, gameUserMap.get(v.id))
+      return {
+        ...v,
+        userTotal: (gameUserMap.get(v.id) || []).length,
+        userCount: (gameUserMap.get(v.id) || []).filter(v => !!v).length,
+      }
+    })
+
+    await connection.end()
+    return RESPONSE.success(result)
+  } catch (e) {
+
+    return RESPONSE.error(e.message)
+  }
+}
+
 module.exports.create = async (params) => {
   try {
     const connection = await getConnection()

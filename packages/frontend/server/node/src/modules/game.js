@@ -3,6 +3,12 @@ const router = express.Router()
 
 const DB = require('@nana/db-mysql_node')
 
+router.get('/list', async (req, res) => {
+  const result = await DB.game.list()
+
+  res.send(result)
+})
+
 router.post('/create', async (req, res) => {
   const params = {
     user_id: res.locals.user.id,

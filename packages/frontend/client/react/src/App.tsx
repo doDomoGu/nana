@@ -1,15 +1,17 @@
-// import { MemoryRouter as Router } from 'react-router-dom'
-// import Bottom from './layouts/Bottom'
 import Auth from './components/auth'
-function App() {
-  // const [activeKey, setActiveKey] = useState('todo')
-  return (
-    // <Router>
-    //  <Bottom />
-    // </Router>
+import Main from './components/main'
 
+import { useUser } from '@/context/User.tsx'
+
+function App() {
+  const [userState] = useUser()
+
+  return (
     <>
-      <Auth />
+      <div>
+        <Auth />
+      </div>
+      <div>{userState.isLoggedIn ? <Main /> : null}</div>
     </>
   )
 }

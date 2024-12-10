@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Dialog, Form, Input, Button } from 'antd-mobile'
+import { Form, Input, Button } from 'antd-mobile'
 
 import * as UserApi from '@/api/user'
 
