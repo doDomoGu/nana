@@ -66,8 +66,8 @@ module.exports.list = async () => {
       // console.log(v.id, gameUserMap.get(v.id))
       return {
         ...v,
-        userTotal: (gameUserMap.get(v.id) || []).length,
-        userCount: (gameUserMap.get(v.id) || []).filter(v => !!v).length,
+        userTotal: gameUserMap.get(v.id) ? gameUserMap.get(v.id).length : null,
+        userCount: gameUserMap.get(v.id) ? gameUserMap.get(v.id).filter(v => !!v).length : null
       }
     })
 

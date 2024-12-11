@@ -9,6 +9,8 @@ type Game = {
   id: number
   name: string
   status: number
+  userCount: number
+  userTotal: number
 }
 
 const statusMap = new Map()
@@ -22,6 +24,7 @@ const Main = (props) => {
   const getList = async () => {
     const res = await GameApi.list()
     if (res.code == 200) {
+      console.log('game-list:', res.data)
       setGameList(res.data)
     }
   }
@@ -35,7 +38,7 @@ const Main = (props) => {
       <List header="游戏房间">
         {gameList.map((game) => (
           <List.Item key={game.id}>
-            <div></div># {game.id}
+            <div># {game.id}</div>
             <div>
               <Tag
                 color={
@@ -46,6 +49,9 @@ const Main = (props) => {
                   statusMap.get(game.status).text) ||
                   '--'}
               </Tag>
+              {game.status != -1
+                ? `${game.userCount} / ${game.userTotal}`
+                : null}
             </div>
           </List.Item>
         ))}
