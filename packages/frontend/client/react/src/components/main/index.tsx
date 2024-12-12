@@ -33,11 +33,22 @@ const Main = (props) => {
     getList()
   }, [])
 
+  const handleClick = (game_id: number, game_status: number) => {
+    if (game_status == -1) {
+      GameApi.create({ name: 'test' + new Date() })
+    } else if (game_status == 0) {
+      GameApi.enter({ game_id })
+    }
+  }
+
   return (
     <div>
       <List header="游戏房间">
         {gameList.map((game) => (
-          <List.Item key={game.id}>
+          <List.Item
+            key={game.id}
+            onClick={() => handleClick(game.id, game.status)}
+          >
             <div># {game.id}</div>
             <div>
               <Tag
