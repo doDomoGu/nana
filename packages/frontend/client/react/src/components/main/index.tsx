@@ -31,6 +31,11 @@ const Main = (props) => {
 
   useEffect(() => {
     getList()
+    const intervalId = setInterval(() => {
+      getList()
+    }, 5000) // 每5秒发起一次请求
+
+    return () => clearInterval(intervalId)
   }, [])
 
   const handleClick = (game_id: number, game_status: number) => {
@@ -49,7 +54,10 @@ const Main = (props) => {
             key={game.id}
             onClick={() => handleClick(game.id, game.status)}
           >
-            <div># {game.id}</div>
+            <div>
+              # {game.id}
+              {game.status != -1 ? `${game.name}` : null}
+            </div>
             <div>
               <Tag
                 color={
