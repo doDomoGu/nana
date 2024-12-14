@@ -79,6 +79,11 @@ module.exports.list = async () => {
   }
 }
 
+/**
+ * 
+ * @param {name: string, user_id: number, player_num: number, game_id: number} params 
+ * @returns 
+ */
 module.exports.create = async (params) => {
   try {
     const connection = await getConnection()
@@ -95,7 +100,7 @@ module.exports.create = async (params) => {
 
     // 检测是否有空余的房间
     const [gameRestRes] = await connection.execute(
-      `SELECT id FROM \`game\` WHERE status = -1 ORDER BY \`id\` ASC limit 1`
+      `SELECT id FROM \`game\` WHERE status = -1${params.game_id ? ` and id = ${params.game_id}` : ''} ORDER BY \`id\` ASC limit 1`
     )
 
     if (gameRestRes && gameRestRes.length != 1) {
@@ -216,29 +221,44 @@ module.exports.leave = async (params) => {
       throw new Error('game status isn\'t [not start]')
     }
 
-    // 查询game_user表中 roomOrd >= 当前user的roomOrd
-    const [gameUsersRes] = await connection.execute(
-      `SELECT user_id, room_ord FROM \`game_user\` WHERE game_id = ${gameId} and room_ord >= ${roomOrd} ORDER BY \`room_ord\` ASC`
+
+    // 查询当前玩家是不是这个房间里最后的一个玩家  
+    const [lastOneRes] = await connection.execute(
+      `SELECT count(*) as cnt FROM \`game_user\` WHERE game_id = ${gameId} and user_id is not null`
     )
 
-    const updateData = []
-    for (let i = 0; i < gameUsersRes.length; i++) {
-      updateData.push({
-        room_ord: gameUsersRes[i].room_ord,
-        user_id: i == gameUsersRes.length - 1 ? null : gameUsersRes[i + 1].user_id,
-      })
-    }
-
-
-    // 将game_user表中  oomOrd >= 当前user的roomOrd user_id 置为null
-    await connection.execute(
-      `UPDATE \`game_user\` SET user_id = NULL WHERE game_id = ${gameId} and room_ord >= ${roomOrd}`
-    )
-
-    for (let item of updateData) {
+    if (lastOneRes && lastOneRes[0].cnt == 1) {
       await connection.execute(
-        `UPDATE \`game_user\` SET user_id = ${item.user_id} WHERE game_id = ${gameId} and room_ord = ${item.room_ord}`
+        `UPDATE \`game\` SET name = NULL, status = -1 WHERE id = ${gameId}`
       )
+      await connection.execute(
+        `DELETE FROM \`game_user\` WHERE game_id = ${gameId}`
+      )
+    } else {
+      // 查询game_user表中 roomOrd >= 当前user的roomOrd
+      const [gameUsersRes] = await connection.execute(
+        `SELECT user_id, room_ord FROM \`game_user\` WHERE game_id = ${gameId} and room_ord >= ${roomOrd} ORDER BY \`room_ord\` ASC`
+      )
+
+      const updateData = []
+      for (let i = 0; i < gameUsersRes.length; i++) {
+        updateData.push({
+          room_ord: gameUsersRes[i].room_ord,
+          user_id: i == gameUsersRes.length - 1 ? null : gameUsersRes[i + 1].user_id,
+        })
+      }
+
+
+      // 将game_user表中  roomOrd >= 当前user的roomOrd user_id 置为null
+      await connection.execute(
+        `UPDATE \`game_user\` SET user_id = NULL WHERE game_id = ${gameId} and room_ord >= ${roomOrd}`
+      )
+
+      for (let item of updateData) {
+        await connection.execute(
+          `UPDATE \`game_user\` SET user_id = ${item.user_id} WHERE game_id = ${gameId} and room_ord = ${item.room_ord}`
+        )
+      }
     }
 
     await connection.end()

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { List, Tag } from 'antd-mobile'
+import dayjs from 'dayjs'
 
 import * as GameApi from '@/api/game'
 
@@ -38,9 +39,13 @@ const Main = (props) => {
     return () => clearInterval(intervalId)
   }, [])
 
-  const handleClick = (game_id: number, game_status: number) => {
+  const handleClick = async (game_id: number, game_status: number) => {
     if (game_status == -1) {
-      GameApi.create({ name: 'test' + new Date() })
+      await GameApi.create({
+        name: 'test' + dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        game_id
+      })
+      getList()
     } else if (game_status == 0) {
       GameApi.enter({ game_id })
     }

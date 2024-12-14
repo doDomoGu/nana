@@ -13,6 +13,7 @@ router.post('/create', async (req, res) => {
   const params = {
     user_id: res.locals.user.id,
     name: req.body.name,
+    game_id: req.body.game_id,
     player_num: req.body.player_num || 2,
   }
 
