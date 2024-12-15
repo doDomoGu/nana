@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 
 const DB = require('@nana/db-mysql_node')
+const RESPONSE = require('@frontServer/utils/response')
+
 
 router.get('/list', async (req, res) => {
   const result = await DB.game.list()
@@ -19,7 +21,7 @@ router.post('/create', async (req, res) => {
 
   const result = await DB.game.create(params)
 
-  res.send({ result })
+  res.send(result)
 })
 
 router.post('/enter', async (req, res) => {
@@ -30,7 +32,7 @@ router.post('/enter', async (req, res) => {
 
   const result = await DB.game.enter(params)
 
-  res.send({ result })
+  res.send(result)
 })
 
 router.post('/leave', async (req, res) => {
@@ -40,7 +42,21 @@ router.post('/leave', async (req, res) => {
 
   const result = await DB.game.leave(params)
 
-  res.send({ result })
+  res.send(result)
+})
+
+
+router.get('/room', async (req, res) => {
+  const params = {
+    user_id: res.locals.user.id
+  }
+
+  const result = await DB.game.room(params)
+  if (result.code == 200) {
+    return res.send(RESPONSE.success(result.data))
+  } else {
+    return res.send(RESPONSE.error(result.msg))
+  }
 })
 
 module.exports = router

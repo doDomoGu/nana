@@ -195,7 +195,11 @@ module.exports.enter = async (params) => {
   }
 }
 
-
+/**
+ * 
+ * @param {user_id: number} params 
+ * @returns 
+ */
 module.exports.leave = async (params) => {
   try {
     const connection = await getConnection()
@@ -263,6 +267,46 @@ module.exports.leave = async (params) => {
 
     await connection.end()
     return RESPONSE.success(true)
+  } catch (e) {
+
+    return RESPONSE.error(e.message)
+  }
+}
+
+
+/**
+ * 获取user_id所在房间信息  不在则返回null 
+ * @param {user_id: number} params 
+ * @returns 
+ */
+module.exports.room = async (params) => {
+  try {
+    const connection = await getConnection()
+
+    // 检测该用户是否在房间中
+    const [userExistRes] = await connection.execute(
+      `SELECT * FROM \`game_user\` WHERE user_id = ${params.user_id}`
+    )
+
+    if (!userExistRes || userExistRes.length != 1) {
+      throw new Error('not in room')
+    }
+
+    const game_id = userExistRes[0].game_id
+
+    const [gameRes] = await connection.execute(
+      `SELECT * FROM \`game\` WHERE id = ${game_id}`
+    )
+
+    const [gameUserRes] = await connection.execute(
+      `SELECT * FROM \`game_user\` WHERE game_id = ${game_id} ORDER BY room_ord ASC`
+    )
+
+    await connection.end()
+    return RESPONSE.success({
+      game: gameRes[0],
+      gameUser: gameUserRes
+    })
   } catch (e) {
 
     return RESPONSE.error(e.message)
