@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 // import PropTypes from 'prop-types'
-import { SpinLoading } from 'antd-mobile'
+import { LoadingMask } from '@/components/common'
 
 import { useGame } from '@/context/Game.tsx'
+import { useGlobal } from '@/context/Global.tsx'
 
 import { ResponseType } from '@/api/types'
 
@@ -13,27 +14,28 @@ import GameRoom from './GameRoom'
 
 // const Main = (props) => {
 const Main = () => {
-  const [loading, setLoading] = useState(true)
-  const [gameState, dispatch] = useGame()
+  const [globalState, globalDispatch] = useGlobal()
+  const [gameState, gameDispatch] = useGame()
 
   const getRoom = async () => {
     const roomRes: ResponseType = await GameApi.room()
     console.log({ roomRes })
     if (roomRes.code == 200) {
-      dispatch({ type: 'ENTER_ROOM', payload: roomRes.data })
+      gameDispatch({ type: 'ENTER_ROOM', payload: roomRes.data })
     }
   }
 
   useEffect(() => {
+    globalDispatch({ type: 'SET_LOADING', payload: true })
     getRoom().then(() => {
-      setLoading(false)
+      globalDispatch({ type: 'SET_LOADING', payload: false })
     })
   }, [])
 
   return (
     <div>
-      {loading ? (
-        <SpinLoading />
+      {globalState.loading ? (
+        <LoadingMask />
       ) : (
         <div>{gameState.isInRoom ? <GameRoom /> : <GameList />}</div>
       )}

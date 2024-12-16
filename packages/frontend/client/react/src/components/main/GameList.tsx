@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { List, Tag } from 'antd-mobile'
 import dayjs from 'dayjs'
 
+import { LoadingMask } from '@/components/common'
+
 import { useGame } from '@/context/Game'
 import * as GameApi from '@/api/game'
 import { ResponseType } from '@/api/types'
@@ -25,6 +27,7 @@ statusMap.set(1, { text: '进行中', color: 'danger' })
 const GameList = () => {
   const [gameList, setGameList] = useState<Game[]>([])
   const [, dispatch] = useGame()
+  const [loading, setLoading] = useState(false)
 
   const getList = async () => {
     const res: ResponseType = await GameApi.list()
@@ -44,6 +47,7 @@ const GameList = () => {
   }, [])
 
   const handleClick = async (game_id: number, game_status: number) => {
+    setLoading(true)
     if (game_status == -1) {
       await GameApi.create({
         name: 'test' + dayjs().format('YYYY-MM-DD HH:mm:ss'),
@@ -58,6 +62,7 @@ const GameList = () => {
     if (roomRes.code == 200) {
       dispatch({ type: 'ENTER_ROOM', payload: roomRes.data })
     }
+    setLoading(false)
   }
 
   return (
@@ -89,6 +94,7 @@ const GameList = () => {
           </List.Item>
         ))}
       </List>
+      {loading ? <LoadingMask /> : null}
     </div>
   )
 }
